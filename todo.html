@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>todolist</title>
+  </head>
+  <body>
+    <h1>Todo Homepage</h1>
+    <div>
+    <button type="button" name="add" id="add">+</button>
+    <button type="button" name="minus" id="minus">-</button>
+    <button type="button" name="refresh" id="refresh">🔎</button>
+    </div>
+    <input type="text" name="item" value="" id = "item" placeholder="item...">
+    <div class="">
+      <pre id="list"></pre>
+    </div>
+    <script type="text/javascript">
+    function html(id){
+        return document.getElementById(id);
+    }
+    function refresh(){
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("POST", "service3");
+      xhttp.send(document.cookie+"&status=i");
+      xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 & this.status == 200) {
+                var list = html("list");
+                list.innerHTML=this.responseText;
+          }
+          else {
+            alert("error");
+          }
+        };
+      }
+
+    html("add").addEventListener("click",function(){
+      var item = html("item").value;
+      var xhttp = new XMLHttpRequest()
+
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert("success");
+            refresh();
+        }
+        else {
+          alert("error");
+        }
+      };
+      xhttp.open("POST", "service3");
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      xhttp.send(document.cookie+"&todo="+item+"&status=add");
+
+
+    })
+    html("minus").addEventListener("click",function(){
+      var item = html("item").value;
+      var xhttp = new XMLHttpRequest()
+      xhttp.open("POST", "service3");
+      xhttp.send(document.cookie+"&todo="+item+"&status=minus");
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 & this.status == 200) {
+            alert("success");
+            refresh();
+        }
+        else {
+          alert("error");
+        }
+      };
+
+    })
+    html("refresh").addEventListener("click",function(){
+        refresh();
+    })
+    </script>
+  </body>
+</html>

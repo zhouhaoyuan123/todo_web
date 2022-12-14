@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3"
+  },
+  "name": "todo_web",
+  "version": "1.0.0",
+  "description": "todo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aaron",
+  "license": "ISC",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhouhaoyuan123/todo_web.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/zhouhaoyuan123/todo_web/issues"
+  },
+  "homepage": "https://github.com/zhouhaoyuan123/todo_web#readme"
+}
