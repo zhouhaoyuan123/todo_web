@@ -1,3 +1,5 @@
+const multer = require('multer');
+var log = require("./log.js");
 var fs = require("fs");
 var cookieparser = require("cookie-parser");
 var express = require("express");
@@ -5,12 +7,18 @@ var bodyparser = require("body-parser");
 var mysql = require("mysql");
 var app = express();
 var body_parser = bodyparser.urlencoded({extended:false});
-connection = mysql.createConnection({
+var conf = {
       host:"localhost",
       user:"root",
       password:"aaron123",
       database:"nodejsd"
-});
+}
+
+const file_share = require('./components/file_sharing_extension/file_sharing.js');
+const access = require('./components/file_sharing_extension/access_file.js');
+app.use(express.static(__dirname+"/css"));
+var conf2 = multer({ dest: './tmp'});
+
 app.use(cookieparser());
 app.get("/",function(req,res){
   console.log("here");
@@ -19,10 +27,12 @@ app.get("/",function(req,res){
 app.post("/service",body_parser,function(req,res){
   console.log(req.body.user);
   var r;
+  connection = mysql.createConnection(conf);
+  connection.connect();
   var q = "SELECT * FROM users WHERE username = '"+req.body.user+"';";
   connection.query(q,function(error,result,fields){
 
-    if(error){console.error(error);throw error};
+    if(error){console.error(error);log(error);};
       try{
         r = result[0];
 
@@ -39,30 +49,32 @@ app.post("/service",body_parser,function(req,res){
       catch(err){
         console.log("here");
         console.log("ok");
-        console.log(err);
+        log(err);
         res.sendFile(__dirname+"/usrn.html");
       }
   })
-
+  connection.end();
 })
 app.post("/service2",body_parser,function(req,res){
   var q = "INSERT INTO users(username,password) VALUES("+"'"+req.body.user+"','"+req.body.password+"');";
   console.log(q);
+  connection = mysql.createConnection(conf);
+  connection.connect();
   connection.query(q,function(error,result,field){
-    if(error){console.error(error);throw error};
+    if(error){console.error(error);log(error);};
     res.sendFile(__dirname+"/todo.html");
     console.log("ok");
 
   })
+  connection.end();
   fs.writeFile(req.body.user+".txt","",function(err){
     if(err){
-      throw err;
+      log(err);
     }
   })
 })
 app.post("/service3",body_parser,function(req,res){
   console.log(req.body.user);
-  console.log("value of todo:"+req.body.todo);
   console.log("value of status:"+req.body.status);
     var s = "";
     if(req.body.status == "add"){
@@ -87,6 +99,9 @@ app.post("/service3",body_parser,function(req,res){
     }
 
 })
+app.post("/file_share_service",conf2.array("file"),file_share.route);
+app.post("/file_share_service2",body_parser,access.route);
+app.post("/file_share_service3",body_parser,file_share.route2);
 var server = app.listen(8081,function(){
   console.log("start up ok");
 })

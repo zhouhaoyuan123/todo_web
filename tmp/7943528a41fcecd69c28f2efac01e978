@@ -1,0 +1,27 @@
+#include <string>
+
+class parser {
+	private:
+		string ps;
+	public:
+		parser(char p[]) {
+			ps = p;
+		}
+		void parse(string target[][]) {
+			int cnt = 0;
+			int i = 1;
+			while (ps.find("=", cnt + 1) != string::npos) {
+				if (cnt == 0) {
+					int tmp = ps.find("=", cnt);
+					target[0][0] = ps.substr(0, tmp);
+					target[0][1] = ps.substr(tmp + 1, ps.find("&", cnt));
+					cnt = ps.find("&", cnt);
+					continue;
+				}
+				int tmp = ps.find("=", cnt);
+				target[i][0] = ps.substr(cnt, tmp);
+				target[i][1] = ps.substr(tmp + 1, ps.find("&", cnt + 1));
+				cnt = cnt = ps.find("&", cnt + 1);
+			}
+		}
+};

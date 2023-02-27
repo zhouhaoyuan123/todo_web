@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <link rel = "stylesheet" href="index.css">
     <meta charset="utf-8">
     <title>todolist</title>
   </head>
@@ -9,7 +10,7 @@
     <div>
     <button type="button" name="add" id="add">+</button>
     <button type="button" name="minus" id="minus">-</button>
-    <button type="button" name="refresh" id="refresh">🔎</button>
+    <button type="button" name="refresh" id="refresh">↺</button>
     </div>
     <input type="text" name="item" value="" id = "item" placeholder="item...">
     <div class="">
@@ -21,53 +22,63 @@
     }
     function refresh(){
       const xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "service3");
-      xhttp.send(document.cookie+"&status=i");
       xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 & this.status == 200) {
-                var list = html("list");
-                list.innerHTML=this.responseText;
-          }
-          else {
-            alert("error");
-          }
-        };
-      }
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                html("list").innerHTML = this.responseText;
+                alert("success");
+
+            } else {
+                alert("error");
+            }
+        }
+
+      };
+      xhttp.open("POST", "service3");
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      console.log(document.cookie+"&status=i");
+      xhttp.send(document.cookie+"&status=i");
+    }
 
     html("add").addEventListener("click",function(){
       var item = html("item").value;
       var xhttp = new XMLHttpRequest()
 
       xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert("success");
-            refresh();
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                alert("success");
+                refresh();
+            } else {
+                alert("error");
+            }
         }
-        else {
-          alert("error");
-        }
+
       };
       xhttp.open("POST", "service3");
       xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      console.log(document.cookie+"&todo="+item+"&status=add");
       xhttp.send(document.cookie+"&todo="+item+"&status=add");
-
-
     })
     html("minus").addEventListener("click",function(){
       var item = html("item").value;
       var xhttp = new XMLHttpRequest()
-      xhttp.open("POST", "service3");
-      xhttp.send(document.cookie+"&todo="+item+"&status=minus");
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 & this.status == 200) {
-            alert("success");
-            refresh();
-        }
-        else {
-          alert("error");
-        }
-      };
 
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                alert("success");
+                refresh();
+            } else {
+                alert("error");
+            }
+        }
+
+      };
+      xhttp.open("POST", "service3");
+      xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      console.log(document.cookie+"&todo="+item+"&status=minus");
+      xhttp.send(document.cookie+"&todo="+item+"&status=minus");
     })
     html("refresh").addEventListener("click",function(){
         refresh();
